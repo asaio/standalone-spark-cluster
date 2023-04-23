@@ -1,11 +1,13 @@
-FROM openjdk:11.0.11-jre-slim-buster as builder
+FROM amazoncorretto:11 as builder
 
 # Add Dependencies for PySpark
-RUN apt-get update && apt-get install -y curl vim wget software-properties-common ssh net-tools ca-certificates python3 python3-pip python3-numpy python3-matplotlib python3-scipy python3-pandas python3-simpy
+RUN yum install -y curl wget ca-certificates python37 python3-pip tar gzip
 
-RUN update-alternatives --install "/usr/bin/python" "python" "$(which python3)" 1
+# RUN update-alternatives --install "/usr/bin/python" "python" "$(which python3)" 1
 
-RUN python -m pip install --upgrade pandas
+COPY requirements.txt /tmp/requirements.txt
+
+RUN python3 -m pip install -r /tmp/requirements.txt
 
 # Fix the value of PYTHONHASHSEED
 # Note: this is needed when you use Python 3.3 or greater
