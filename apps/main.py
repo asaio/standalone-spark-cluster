@@ -1,5 +1,5 @@
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col,date_format
+from pyspark.sql import SparkSession, SQLContext
+from pyspark.sql.functions import col,date_format,lit
 import pandas as pd
 
 def init_spark():
@@ -20,19 +20,34 @@ def main():
   sql,sc = init_spark()
 
   df_tod = sql.read.json('/opt/spark-data/tod_test_json.json')
-  df_yt = sql.read.json('/opt/spark-data/yt_test_json.json')
-  df_tod_pd = df_tod.toPandas()
-  df_tod_columns = df_tod_pd.columns.tolist()
-  df_yt_pd = df_yt.toPandas()
-  df_yt_columns = df_yt_pd.columns.tolist()
-  df_diff_new_pd = pd.json_normalize(df_yt_pd['item']).join(df_yt_pd[['type']]).sort_index(axis=1).merge(pd.json_normalize(df_tod_pd['item']).join(df_tod_pd[['type']]).sort_index(axis=1), how='outer', indicator=True)
-  df_diff_new_pd = df_diff_new_pd[df_diff_new_pd['_merge'] == 'right_only']
-  del df_tod
-  del df_yt
-  del df
-  df_diff_new = sql.CreateDataFrame(df_diff_new_pd)
-  df_diff_new.show(truncate=False)
-  df_diff_new.write.mode('Overwrite').json('/opt/spark-data/delta.json')
+  #df_tod.show(truncate=False)
+  #df_tod.printSchema()
+  df_yt = sql.read.json('/opt/spark-data/yt_test_json.json').withColumn('left', lit('left')).drop('type')
+  #df_yt.show(truncate=False)
+  #df_yt.printSchema()
+  df_outer_spark = df_yt.join(df_tod, on=['item'], how='right_outer')
+  df_diff = df_outer_spark.where(col('left').isNull())
+  df_outer_spark.show()
+  df_outer_spark.printSchema()
+  df_diff.show()
+  df_diff.write.mode('Overwrite').json('/opt/spark-data/delta.json')
+  #df_tod_pd = df_tod.toPandas()
+  #df_tod_columns = df_tod_pd.columns.tolist()
+  #df_yt_pd = df_yt.toPandas()
+  #df_yt_columns = df_yt_pd.columns.tolist()
+  #print(df_yt_pd, df_tod_pd)
+  #df_yt_pd_normalized = pd.json_normalize(df_yt_pd['item'])
+  #df_tod_pd_normalized = pd.json_normalize(df_tod_pd['item'])
+  #print(df_yt_pd_normalized, df_tod_pd_normalized)
+  #df_diff_new_pd = df_yt_pd_normalized.merge(df_tod_pd_normalized, how='outer')
+  #print(df_diff_new_pd)
+  #df_diff_new_pd = df_diff_new_pd[df_diff_new_pd['_merge'] == 'right_only']
+  #del df_tod
+  #del df_yt
+  #print(df_diff_new_pd)
+  #df_diff_new = sql.CreateDataFrame(df_diff_new_pd)
+  #df_diff_new.show(truncate=False)
+  #df_diff_new.write.mode('Overwrite').json('/opt/spark-data/delta.json')
 
   #df = sql.read.load(file,format = "csv", inferSchema="true", sep="\t", header="true"
   #    ) \
