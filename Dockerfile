@@ -1,7 +1,7 @@
-FROM amazoncorretto:11 as builder
+FROM amazoncorretto:latest as builder
 
 # Add Dependencies for PySpark
-RUN yum install -y curl wget ca-certificates python37 python3-pip tar gzip
+RUN yum install -y curl wget ca-certificates python37 python3-pip tar gzip hostname
 
 # RUN update-alternatives --install "/usr/bin/python" "python" "$(which python3)" 1
 
