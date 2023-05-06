@@ -1,0 +1,35 @@
+{
+    "item": {
+        "name": "tabela_1",
+        "createTime": "",
+        "parameters": {
+            "bucketing_version": "2",
+            "comment": "banana"
+        },
+        "partitionKeys": [
+            {
+                "comment": "",
+                "name": "anomesdia",
+                "type": "int"
+            }
+        ],
+        "storageDescriptor": {
+            "columns": [
+                {
+                    "comment": "",
+                    "name": "coluna_1",
+                    "type": "string"
+                }
+            ],
+            "location": "",
+            "serdeInfo": {
+                "parameters": {
+                    "output.format.string": "banana",
+                    "serialization.format": "1"
+                },
+                "SERDE_TYPE": 0
+            }
+        }
+    },
+    "type": "table"
+}
