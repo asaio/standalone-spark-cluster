@@ -2,14 +2,14 @@
         "name": "tabela_1",
         "createTime": "",
         "parameters": {
-            "bucketing_version": "2",
-            "comment": "banana"
+            "comment": "banana",
+            "bucketing_version": "2"
         },
         "partitionKeys": [
             {
+                "type": "int",
                 "comment": "",
-                "name": "anomesdia",
-                "type": "int"
+                "name": "anomesdia"
             }
         ],
         "storageDescriptor": {
@@ -23,8 +23,8 @@
             "location": "",
             "serdeInfo": {
                 "parameters": {
-                    "output.format.string": "banana",
-                    "serialization.format": "1"
+                    "serialization.format": "1",
+                    "output.format.string": "banana"
                 },
                 "SERDE_TYPE": 0
             }
