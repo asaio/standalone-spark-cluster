@@ -1,0 +1,87 @@
+['struct(item.createTime,item.name,struct(item.parameters.bucketing_version,item.parameters.comment) AS parameters,array(struct(item.partitionKeys.comment,item.partitionKeys.name,item.partitionKeys.type)) AS partitionKeys,struct(array(struct(item.storageDescriptor.columns.comment,item.storageDescriptor.columns.name,item.storageDescriptor.columns.type)) AS columns,item.storageDescriptor.location,struct(item.storageDescriptor.serdeInfo.SERDE_TYPE,struct(item.storageDescriptor.serdeInfo.parameters.`output.format.string`,item.storageDescriptor.serdeInfo.parameters.`serialization.format`) AS parameters) AS serdeInfo) AS storageDescriptor) AS item', 'type']
+root
+ |-- item: struct (nullable = true)
+ |    |-- createTime: string (nullable = true)
+ |    |-- name: string (nullable = true)
+ |    |-- parameters: struct (nullable = true)
+ |    |    |-- bucketing_version: string (nullable = true)
+ |    |    |-- comment: string (nullable = true)
+ |    |-- partitionKeys: array (nullable = true)
+ |    |    |-- element: struct (containsNull = true)
+ |    |    |    |-- comment: string (nullable = true)
+ |    |    |    |-- name: string (nullable = true)
+ |    |    |    |-- type: string (nullable = true)
+ |    |-- storageDescriptor: struct (nullable = true)
+ |    |    |-- columns: array (nullable = true)
+ |    |    |    |-- element: struct (containsNull = true)
+ |    |    |    |    |-- comment: string (nullable = true)
+ |    |    |    |    |-- name: string (nullable = true)
+ |    |    |    |    |-- type: string (nullable = true)
+ |    |    |-- location: string (nullable = true)
+ |    |    |-- serdeInfo: struct (nullable = true)
+ |    |    |    |-- SERDE_TYPE: long (nullable = true)
+ |    |    |    |-- parameters: struct (nullable = true)
+ |    |    |    |    |-- output.format.string: string (nullable = true)
+ |    |    |    |    |-- serialization.format: string (nullable = true)
+ |-- type: string (nullable = true)
+
+StructType(List(StructField(item,StructType(List(StructField(createTime,StringType,true),StructField(name,StringType,true),StructField(parameters,StructType(List(StructField(bucketing_version,StringType,true),StructField(comment,StringType,true))),true),StructField(partitionKeys,ArrayType(StructType(List(StructField(comment,StringType,true),StructField(name,StringType,true),StructField(type,StringType,true))),true),true),StructField(storageDescriptor,StructType(List(StructField(columns,ArrayType(StructType(List(StructField(comment,StringType,true),StructField(name,StringType,true),StructField(type,StringType,true))),true),true),StructField(location,StringType,true),StructField(serdeInfo,StructType(List(StructField(SERDE_TYPE,LongType,true),StructField(parameters,StructType(List(StructField(output.format.string,StringType,true),StructField(serialization.format,StringType,true))),true))),true))),true))),true),StructField(type,StringType,true)))
+['item.partitionKeys.comment', 'item.partitionKeys.name', 'item.partitionKeys.type']
+['item.storageDescriptor.columns.comment', 'item.storageDescriptor.columns.name', 'item.storageDescriptor.columns.type']
+THIS FIELD HAS '.' IN IT, ADJUSTING: FROM output.format.string
+TO: `output.format.string`
+THIS FIELD HAS '.' IN IT, ADJUSTING: FROM serialization.format
+TO: `serialization.format`
+root
+ |-- item: struct (nullable = false)
+ |    |-- createTime: string (nullable = true)
+ |    |-- name: string (nullable = true)
+ |    |-- parameters: struct (nullable = false)
+ |    |    |-- bucketing_version: string (nullable = true)
+ |    |    |-- comment: string (nullable = true)
+ |    |-- partitionKeys: array (nullable = false)
+ |    |    |-- element: struct (containsNull = false)
+ |    |    |    |-- comment: array (nullable = true)
+ |    |    |    |    |-- element: string (containsNull = true)
+ |    |    |    |-- name: array (nullable = true)
+ |    |    |    |    |-- element: string (containsNull = true)
+ |    |    |    |-- type: array (nullable = true)
+ |    |    |    |    |-- element: string (containsNull = true)
+ |    |-- storageDescriptor: struct (nullable = false)
+ |    |    |-- columns: array (nullable = false)
+ |    |    |    |-- element: struct (containsNull = false)
+ |    |    |    |    |-- comment: array (nullable = true)
+ |    |    |    |    |    |-- element: string (containsNull = true)
+ |    |    |    |    |-- name: array (nullable = true)
+ |    |    |    |    |    |-- element: string (containsNull = true)
+ |    |    |    |    |-- type: array (nullable = true)
+ |    |    |    |    |    |-- element: string (containsNull = true)
+ |    |    |-- location: string (nullable = true)
+ |    |    |-- serdeInfo: struct (nullable = false)
+ |    |    |    |-- SERDE_TYPE: long (nullable = true)
+ |    |    |    |-- parameters: struct (nullable = false)
+ |    |    |    |    |-- output.format.string: string (nullable = true)
+ |    |    |    |    |-- serialization.format: string (nullable = true)
+ |-- type: string (nullable = true)
+
+['item.partitionKeys.comment', 'item.partitionKeys.name', 'item.partitionKeys.type']
+['item.storageDescriptor.columns.comment', 'item.storageDescriptor.columns.name', 'item.storageDescriptor.columns.type']
+THIS FIELD HAS '.' IN IT, ADJUSTING: FROM output.format.string
+TO: `output.format.string`
+THIS FIELD HAS '.' IN IT, ADJUSTING: FROM serialization.format
+TO: `serialization.format`
+StructType(List(StructField(item,StructType(List(StructField(createTime,StringType,true),StructField(name,StringType,true),StructField(parameters,StructType(List(StructField(bucketing_version,StringType,true),StructField(comment,StringType,true))),false),StructField(partitionKeys,ArrayType(StructType(List(StructField(comment,ArrayType(StringType,true),true),StructField(name,ArrayType(StringType,true),true),StructField(type,ArrayType(StringType,true),true))),false),false),StructField(storageDescriptor,StructType(List(StructField(columns,ArrayType(StructType(List(StructField(comment,ArrayType(StringType,true),true),StructField(name,ArrayType(StringType,true),true),StructField(type,ArrayType(StringType,true),true))),false),false),StructField(location,StringType,true),StructField(serdeInfo,StructType(List(StructField(SERDE_TYPE,LongType,true),StructField(parameters,StructType(List(StructField(output.format.string,StringType,true),StructField(serialization.format,StringType,true))),false))),false))),false))),false),StructField(type,StringType,true)))
+23/05/10 12:59:27 INFO SparkContext: Invoking stop() from shutdown hook
+23/05/10 12:59:27 INFO SparkUI: Stopped Spark web UI at http://1a3ccaadd297:4040
+23/05/10 12:59:27 INFO StandaloneSchedulerBackend: Shutting down all executors
+23/05/10 12:59:27 INFO CoarseGrainedSchedulerBackend$DriverEndpoint: Asking each executor to shut down
+23/05/10 12:59:27 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+23/05/10 12:59:27 INFO MemoryStore: MemoryStore cleared
+23/05/10 12:59:27 INFO BlockManager: BlockManager stopped
+23/05/10 12:59:27 INFO BlockManagerMaster: BlockManagerMaster stopped
+23/05/10 12:59:27 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+23/05/10 12:59:27 INFO SparkContext: Successfully stopped SparkContext
+23/05/10 12:59:27 INFO ShutdownHookManager: Shutdown hook called
+23/05/10 12:59:27 INFO ShutdownHookManager: Deleting directory /tmp/spark-57c16c12-2e64-4838-a518-1e9c52d491b0
+23/05/10 12:59:27 INFO ShutdownHookManager: Deleting directory /tmp/spark-57c16c12-2e64-4838-a518-1e9c52d491b0/pyspark-6fa5b36d-e7ac-44d4-a16b-d3a4f9ca0bfc
+23/05/10 12:59:27 INFO ShutdownHookManager: Deleting directory /tmp/spark-521e41d5-2b4d-46a8-91a6-ea6601f0922d
