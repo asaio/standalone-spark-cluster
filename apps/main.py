@@ -56,8 +56,7 @@ def main():
         column.dataType = column.dataType.elementType
       if isinstance(column.dataType, StructType):
         fields_in_col = []
-        for field in sorted(column.jsonValue()['type']['fields'],
-        key=lambda x: x['name']):
+        for field in sorted(column.jsonValue()['type']['fields'],key=lambda x: x['name']):
           #print(field, type(field))
           if ((field['type'] == 'string') & (('.' in field['name']) & (r'`' not in field['name']))):
             print(f"THIS FIELD HAS '.' IN IT, ADJUSTING: FROM {field['name']}")
@@ -68,9 +67,9 @@ def main():
           #  new_struct = StructType([StructField.fromJson(field)])
           #else:
           #  new_struct = StructType([StructField.fromJson(field)])
-          if ((array_column!=None) & (field['type'] not in ['struct', 'array'])):
-            #print(column.name, field, field.items())
-            new_struct = StructType([StructField(name=field['name'], dataType=StringType())])
+          if ((array_column) & (field['type'] not in ['struct', 'array'])):
+            print(column.name, field, field.items())
+            new_struct = StructType([StructField(name=field['name'], dataType=StringType, True)])
           else:
             new_struct = StructType([StructField.fromJson(field)])
           new_prefix = prefix+'.'+column.name if prefix else column.name
@@ -79,10 +78,10 @@ def main():
           #print(new_struct)
           #print(fields_in_col)
           fields_in_array_col = []
-          #for f in fields_in_col:
-          #  unnested_f = f.split('.')[-1]
-          #  fields_in_array_col.append(f'cast({f} as string) {unnested_f}')
-          select_cols.append('array(struct('+','.join(fields_in_col)+f')) AS {column.name}')
+          for f in fields_in_col:
+            unnested_f = f.split('.')[-1]
+            fields_in_array_col.append(f'cast({f} as string) {unnested_f}')
+          select_cols.append('array(struct('+','.join(fields_in_array_col)+f')) AS {column.name}')
           #print(select_cols)
         else:
           select_cols.append('struct('+','.join(fields_in_col)+f') AS {column.name}')
@@ -95,13 +94,13 @@ def main():
 
   #print(flatten_schema(df.schema))
   #print(schema_to_select_expr(df.schema))
-  df_1 = df.union(df)
-  df_2 = df.union(df).selectExpr(schema_to_select_expr(df.schema))
-  #print(df_2.schema)
-  df_1.printSchema()
-  df_2.printSchema()
-  df_1.show(truncate=False)
-  df_2.show(truncate=False)
+  df.union(df).show(truncate=False)
+  #df.printSchema()
+  #print(df.schema)
+  df.selectExpr(schema_to_select_expr(df.schema)).printSchema()
+  print(df.selectExpr(schema_to_select_expr(df.schema)).schema)
+  df_2 = df.union(df)
+  df_2.selectExpr(schema_to_select_expr(df.schema)).show(truncate=False)
   #df_tod.show(truncate=False)
   #df_tod.printSchema()
   #df_yt = sql.read.json('/opt/spark-data/yt_test_json.json').drop('type')
