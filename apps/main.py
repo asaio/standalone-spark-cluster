@@ -3,7 +3,7 @@ from operator import itemgetter
 import re
 from pyspark.sql import SparkSession, SQLContext
 from pyspark.sql.functions import col,date_format,lit
-from pyspark.sql.types import StructType,ArrayType,StructField
+from pyspark.sql.types import StructType,ArrayType,StructField,StringType
 import pandas as pd
 
 def init_spark():
@@ -28,37 +28,6 @@ def main():
   df = sql.read.json('/opt/spark-data/table_record.json', multiLine=True, encoding = "UTF-8")
   schema = df.schema
   
-  def schema_to_select_expr(schema, prefix=''):
-    select_cols = []
-    array_column = ''
-    for column in sorted(schema, key=lambda x: x.name):
-      if isinstance(column.dataType, ArrayType):
-        array_column = column.dataType
-        column.dataType = column.dataType.elementType
-      if isinstance(column.dataType, StructType):
-        fields_in_col = []
-        for field in sorted(column.jsonValue()['type']['fields'],
-        key=lambda x: x['name']):
-          #print(field, type(field))
-          if ((field['type'] == 'string') & (('.' in field['name']) & (r'`' not in field['name']))):
-            print(f"THIS FIELD HAS '.' IN IT, ADJUSTING: FROM {field['name']}")
-            field['name'] = r'`'+field['name']+r'`'
-            print(f"TO: {field['name']}")
-          #print(field, type(field))
-          new_struct = StructType([StructField.fromJson(field)])
-          new_prefix = prefix+'.'+column.name if prefix else column.name
-          fields_in_col.extend(schema_to_select_expr(new_struct, prefix=new_prefix))
-        if array_column:
-          select_cols.append('array(struct('+','.join(fields_in_col)+f')) AS {column.name}')
-        else:
-          select_cols.append('struct('+','.join(fields_in_col)+f') AS {column.name}')
-      else:
-        if prefix:
-          select_cols.append(prefix+'.'+column.name)
-        else:
-          select_cols.append(column.name)
-    return select_cols
-
   def flatten_schema(schema, prefix = None, sort = True) -> list:
     # List to hold the dynamically generated column names
     flattened_col_list = []
@@ -77,11 +46,62 @@ def main():
         return sorted(flattened_col_list, key=lambda given_tuple: given_tuple[0])
     else:
         return flattened_col_list
+
+  def schema_to_select_expr(schema, prefix=''):
+    select_cols = []
+    array_column = ''
+    for column in sorted(schema, key=lambda x: x.name):
+      if isinstance(column.dataType, ArrayType):
+        array_column = column.dataType
+        column.dataType = column.dataType.elementType
+      if isinstance(column.dataType, StructType):
+        fields_in_col = []
+        for field in sorted(column.jsonValue()['type']['fields'],
+        key=lambda x: x['name']):
+          #print(field, type(field))
+          if ((field['type'] == 'string') & (('.' in field['name']) & (r'`' not in field['name']))):
+            print(f"THIS FIELD HAS '.' IN IT, ADJUSTING: FROM {field['name']}")
+            field['name'] = r'`'+field['name']+r'`'
+            print(f"TO: {field['name']}")
+          #print(field, type(field))
+          #if array_column:
+          #  new_struct = StructType([StructField.fromJson(field)])
+          #else:
+          #  new_struct = StructType([StructField.fromJson(field)])
+          if ((array_column!=None) & (field['type'] not in ['struct', 'array'])):
+            #print(column.name, field, field.items())
+            new_struct = StructType([StructField(name=field['name'], dataType=StringType())])
+          else:
+            new_struct = StructType([StructField.fromJson(field)])
+          new_prefix = prefix+'.'+column.name if prefix else column.name
+          fields_in_col.extend(schema_to_select_expr(new_struct, prefix=new_prefix))
+        if array_column:
+          #print(new_struct)
+          #print(fields_in_col)
+          fields_in_array_col = []
+          #for f in fields_in_col:
+          #  unnested_f = f.split('.')[-1]
+          #  fields_in_array_col.append(f'cast({f} as string) {unnested_f}')
+          select_cols.append('array(struct('+','.join(fields_in_col)+f')) AS {column.name}')
+          #print(select_cols)
+        else:
+          select_cols.append('struct('+','.join(fields_in_col)+f') AS {column.name}')
+      else:
+        if prefix:
+          select_cols.append(prefix+'.'+column.name)
+        else:
+          select_cols.append(column.name)
+    return select_cols
+
   #print(flatten_schema(df.schema))
-  print(schema_to_select_expr(df.schema))
-  df.printSchema()
-  print(df.schema)
-  print(df.selectExpr(schema_to_select_expr(df.schema)).printSchema())
+  #print(schema_to_select_expr(df.schema))
+  df_1 = df.union(df)
+  df_2 = df.union(df).selectExpr(schema_to_select_expr(df.schema))
+  #print(df_2.schema)
+  df_1.printSchema()
+  df_2.printSchema()
+  df_1.show(truncate=False)
+  df_2.show(truncate=False)
   #df_tod.show(truncate=False)
   #df_tod.printSchema()
   #df_yt = sql.read.json('/opt/spark-data/yt_test_json.json').drop('type')
