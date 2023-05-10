@@ -1,6 +1,6 @@
 # Python function to flatten the data dynamically
 from pyspark.sql import DataFrame, Column
-from pyspark.sql.functions import udf, to_json, col
+from pyspark.sql.functions import udf, to_json, col, struct, array
 from pyspark.sql.types import ArrayType, StructType, MapType, StringType
 import json
 from datetime import datetime
