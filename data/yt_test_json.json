@@ -1,3 +1,3 @@
-{"item":{"id":1,"name":"ColeVolk","fitness":{"height":130,"body_type":{"convention_2":"cu_de_burro","convention_1":"cu_de_burro"},"weight":60}},"type":"banana"}
-{"item":{"name":"MarkReg","fitness":{"height":130,"weight":60,"body_type":{"convention_1":"cu_de_burro"}}},"type":"banana"}
-{"item":{"id":2,"name":"FayeRaker","fitness":{"height":130,"weight":60,"body_type":{"convention_3":{"test":"yes"},"convention_1":"cu_de_burro","convention_2":"cu_de_burro"}}},"type":"banana"}
+{"item":{"id":1,"name":"ColeVolk","fitness":{"height":130,"body_type":{"convention_2":"valor_1","convention_1":"valor_1"},"weight":60}},"type":"banana"}
+{"item":{"name":"MarkReg","fitness":{"height":130,"weight":60,"body_type":{"convention_1":"valor_1"}}},"type":"banana"}
+{"item":{"id":2,"name":"FayeRaker","fitness":{"height":130,"weight":60,"body_type":{"convention_3":{"test":"yes"},"convention_1":"valor_1","convention_2":"valor_1"}}},"type":"banana"}
