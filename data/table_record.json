@@ -3,7 +3,8 @@
         "createTime": "",
         "parameters": {
             "comment": "banana",
-            "bucketing_version": "2"
+            "bucketing_version": "2",
+            "transient_lastDdlTime": "1686231025"
         },
         "partitionKeys": [
             {
@@ -20,7 +21,7 @@
                     "type": "string"
                 }
             ],
-            "location": "",
+            "location": "/db/path/to/table",
             "serdeInfo": {
                 "parameters": {
                     "serialization.format": "1",
