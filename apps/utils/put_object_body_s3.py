@@ -1,4 +1,5 @@
 import boto3
+import re
 
 def assume_role(role_arn):
     sts = boto3.client('sts')
@@ -9,7 +10,7 @@ def assume_role(role_arn):
     credentials = response['Credentials']
     return credentials
 
-def list_objects(bucket_name, prefix, s3_client):
+def list_objects(bucket_name, prefix, s3_client, filter_pattern=None):
     #credentials = assume_role(role_arn)
     #s3 = boto3.client('s3',
     #                  aws_access_key_id=credentials['AccessKeyId'],
@@ -22,6 +23,11 @@ def list_objects(bucket_name, prefix, s3_client):
     for page in page_iterator:
         if 'Contents' in page:
             objects.extend(page['Contents'])
+
+    if filter_pattern:
+        pattern = re.compile(filter_pattern)
+        filtered_objects = filter(lambda obj: pattern.match(obj['Key']), objects)
+        objects = list(filtered_objects)
 
     return objects
 
